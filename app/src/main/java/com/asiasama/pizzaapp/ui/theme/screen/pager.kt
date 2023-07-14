@@ -9,7 +9,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.asiasama.pizzaapp.ui.theme.screen.food_details.PizzaUiState
@@ -40,10 +41,10 @@ fun Pager(
     HorizontalPager(
         state = pagerState,
         modifier = modifier
-            .fillMaxWidth()
             .height(320.dp)
             .padding(top = 12.dp),
-        itemSpacing = 100.dp
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) { page ->
 
         val pizzaSize = if (pizzaSize == "S") 200.dp else if (pizzaSize == "M") 210.dp else 250.dp
@@ -55,7 +56,7 @@ fun Pager(
 
 
         Box(modifier = Modifier) {
-            Box(modifier = Modifier) {
+            Box(modifier = Modifier.fillMaxSize()) {
                 Image(
                     modifier = Modifier
                         .size(imageSize)
@@ -64,18 +65,17 @@ fun Pager(
                 )
             }
 
-            Box(modifier = Modifier) {
-                item[page].ingredient.forEachIndexed { index, ingredientUiState ->
-                    AnimatedVisibility(
-                        visible = ingredientUiState.isSelectedIngredient,
-                        enter = scaleIn(
-                            initialScale = 1.5f,
-                            animationSpec = tween(100)
-                        ) + expandVertically(expandFrom = Alignment.CenterVertically),
-                        exit = fadeOut(animationSpec = tween(10))
-                    ) {
+            item[page].ingredient.forEachIndexed { index, ingredientUiState ->
+                AnimatedVisibility(
+                    visible = ingredientUiState.isSelectedIngredient,
+                    enter = scaleIn(initialScale = 10f,) ,
+                    exit = fadeOut(animationSpec = tween(10))
+                ) {
+                    Box(modifier = Modifier.fillMaxSize()) {
                         Image(
-                            modifier = Modifier.size(imageSize),
+                            modifier = Modifier
+                                .size(imageSize)
+                                .align(Alignment.Center),
                             painter = painterResource(id = ingredientUiState.image),
                             contentDescription = null
                         )
@@ -84,40 +84,4 @@ fun Pager(
             }
         }
     }
-
 }
-
-//            Box(modifier = Modifier.fillMaxWidth()) {
-//
-//                ingredient.forEachIndexed { index, ingredientUiState ->
-//                    if (currentPage == page) {
-//                        AnimatedVisibility(
-//                            visible = ingredientUiState.isSelectedIngredient,
-//                            enter = scaleIn() + expandVertically(expandFrom = Alignment.CenterVertically),
-//                            exit = fadeOut(animationSpec = tween(10))
-//                        ) {
-//                            Image(
-//                                modifier = Modifier
-//                                    .size(imageSize)
-//                                    .align(Alignment.Center),
-//                                painter = painterResource(id = ingredientUiState.image),
-//                                contentDescription = null
-//                            )
-//                        }
-//                    }
-//                }
-//            }
-//
-//else {
-//    LaunchedEffect(key1 = page) {
-//        if (currentPage != page) {
-//            ingredient.forEachIndexed { index, ingredientUiState ->
-//                ingredientUiState.isSelectedIngredient = false
-//            }
-//        }else{
-//            ingredient.forEachIndexed { index, ingredientUiState ->
-//                ingredientUiState.isSelectedIngredient = true
-//            }
-//        }
-//    }
-//}

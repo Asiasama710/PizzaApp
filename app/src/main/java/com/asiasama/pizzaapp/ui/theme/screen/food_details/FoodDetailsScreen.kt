@@ -89,13 +89,16 @@ fun FoodDetailsContent(
                     .paint(painter = painterResource(id = R.drawable.plate))
             )
 
-            Box {
+
                 Pager(
                     item = state.pizza,
                     pagerState = pagerState,
                     pizzaSize = state.selectedPizzaSize,
+                    modifier = Modifier
+                        .align(alignment = Alignment.Center)
+
                 )
-            }
+
         }
         Row(
             modifier = Modifier.padding(horizontal = 16.dp),
