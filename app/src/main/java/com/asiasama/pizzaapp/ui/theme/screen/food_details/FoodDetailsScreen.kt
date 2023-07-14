@@ -1,5 +1,6 @@
 package com.asiasama.pizzaapp.ui.theme.screen.food_details
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -92,13 +93,9 @@ fun FoodDetailsContent(
                 Pager(
                     item = state.pizza,
                     pagerState = pagerState,
-                    currentPage = state.currentPage,
                     pizzaSize = state.selectedPizzaSize,
-                    ingredientUiState = state.selectedIngredient,
-                    ingredient = state.ingredient,
                 )
             }
-
         }
         Row(
             modifier = Modifier.padding(horizontal = 16.dp),
@@ -122,16 +119,16 @@ fun FoodDetailsContent(
             horizontalArrangement = Arrangement.spacedBy(24.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            itemsIndexed(items = state.ingredient) { position ,item ->
+            itemsIndexed(items = state.pizza[pagerState.currentPage].ingredient) { position ,item ->
                 IngredientChip(
                     modifier = Modifier,
                     state = item,
                     selected = item.isSelectedIngredient,
                     onClick = { onClickIngredient(position,pagerState.currentPage) },
                 )
+                Log.e("TAG", "FoodDetailsContent: ${state.pizza[pagerState.currentPage]}")
             }
         }
-
     }
 
 

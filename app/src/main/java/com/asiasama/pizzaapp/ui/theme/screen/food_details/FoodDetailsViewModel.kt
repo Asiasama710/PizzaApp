@@ -36,11 +36,16 @@ class FoodDetailsViewModel : ViewModel() {
 
     private fun getIngredient() {
         _state.update {
-            it.copy(
-                ingredient = listOf(
-                    IngredientUiState(id = 0, image = R.drawable.ic_basil),
-                    IngredientUiState(id = 1, image = R.drawable.ic_broccoli),
+            it.copy(pizza = it.pizza.map {
+                it.copy(ingredient = listOf(
+                        IngredientUiState(id = 0, imageIcon = R.drawable.ic_basil, image = R.drawable.basil),
+                        IngredientUiState(id = 1, imageIcon = R.drawable.ic_broccoli, image = R.drawable.broccoli),
+                        IngredientUiState(id = 2, imageIcon = R.drawable.ic_sausage, image = R.drawable.sausage),
+                        IngredientUiState(id = 3, imageIcon = R.drawable.ic_onion, image = R.drawable.onion),
+                        IngredientUiState(id = 4, imageIcon = R.drawable.ic_mushroom, image = R.drawable.mushroom),
+                    )
                 )
+            }
             )
         }
     }
@@ -79,42 +84,53 @@ class FoodDetailsViewModel : ViewModel() {
         }
     }
 
-    fun onClickIngredient(IngredientIndex: Int,currentIngredient: Int) {
+    fun onClickIngredient(IngredientIndex: Int, currentIngredient: Int) {
         _state.update {
             it.copy(
-                ingredient = it.ingredient.mapIndexed { index, ingredient ->
-                    if (index == IngredientIndex) {
-                        Log.e("TAG", "onClickIngredient: ${ingredient.isSelectedIngredient}")
-                        Log.e(
-                            "TAG",
-                            "onClickIngredient index : $index , IngredientIndex : $IngredientIndex"
+                it.pizza.mapIndexed { pizzaIndex, pizza ->
+                    if (pizzaIndex == currentIngredient) {
+                        pizza.copy(
+                            ingredient = pizza.ingredient.mapIndexed { index, ingredient ->
+                                if (index == IngredientIndex) {
+                                    Log.e(
+                                        "TAG",
+                                        "onClickIngredient: ${ingredient.isSelectedIngredient}"
+                                    )
+                                    Log.e(
+                                        "TAG",
+                                        "onClickIngredient index : $index , IngredientIndex : $IngredientIndex"
+                                    )
+                                    ingredient.copy(isSelectedIngredient = !ingredient.isSelectedIngredient)
+                                } else {
+                                    Log.e(
+                                        "TAG",
+                                        "onClickIngredient index : $index , IngredientIndex : $IngredientIndex"
+                                    )
+                                    ingredient.copy(isSelectedIngredient = ingredient.isSelectedIngredient)
+                                }
+                            },
                         )
-                        ingredient.copy(isSelectedIngredient = !ingredient.isSelectedIngredient)
-
                     } else {
-                        Log.e(
-                            "TAG",
-                            "onClickIngredient index : $index , IngredientIndex : $IngredientIndex"
+                        pizza.copy(
+                            ingredient = pizza.ingredient.mapIndexed { index, ingredient ->
+                                ingredient.copy(isSelectedIngredient = ingredient.isSelectedIngredient)
+                            },
                         )
-                        ingredient.copy(isSelectedIngredient = ingredient.isSelectedIngredient)
                     }
-
                 },
                 currentPage = currentIngredient,
-                pizza = it.pizza.mapIndexed { index, pizza ->
-                    if (index == currentIngredient) {
-                        pizza.copy(pizzaIngredient = !pizza.pizzaIngredient)
-                    } else {
-                        pizza.copy(pizzaIngredient = pizza.pizzaIngredient)
-                    }
-                }
             )
-
         }
         Log.e("TAG", "pizaa: ${_state.value}")
 
-        Log.e("TAG", "ingredient[IngredientIndex].isSelectedIngredient: ${_state.value.ingredient[IngredientIndex].isSelectedIngredient}")
-        Log.e("TAG", "ingredient: ${_state.value.ingredient}")
+        Log.e(
+            "TAG",
+            "ingredient[IngredientIndex].isSelectedIngredient: ${_state.value.pizza[currentIngredient].ingredient[IngredientIndex].isSelectedIngredient}"
+        )
+        Log.e("TAG", "ingredient: ${_state.value.pizza}")
+
+    }
+
 
 //        val updatedIngredients = ingredients
 //        if (ingredients.isSelectedIngredient) {
@@ -143,8 +159,7 @@ class FoodDetailsViewModel : ViewModel() {
 //                _state.update { it.copy(selectedIngredient = true) }
 //            }
 //        }
-    }
-
-
 }
+
+
 
