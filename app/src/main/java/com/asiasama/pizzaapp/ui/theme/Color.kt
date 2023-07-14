@@ -10,6 +10,7 @@ val Secondary = Color(0xFFE6E6E6)
 val Black_87 = Color(0xDE121212)
 val Black_60 = Color(0x99121212)
 val Black_37 = Color(0x5E121212)
+val Black_30 = Color(0x4D121212)
 val Black_16 = Color(0x29121212)
 val Black_8 = Color(0x14121212)
 

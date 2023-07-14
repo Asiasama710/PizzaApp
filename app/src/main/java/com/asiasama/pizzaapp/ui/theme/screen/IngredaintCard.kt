@@ -1,6 +1,7 @@
 package com.asiasama.pizzaapp.ui.theme.screen
 
-import android.util.Log
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -8,23 +9,27 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.asiasama.pizzaapp.ui.theme.Black_60
 import com.asiasama.pizzaapp.ui.theme.Primary
 import com.asiasama.pizzaapp.ui.theme.RoundedShape
 import com.asiasama.pizzaapp.ui.theme.Secondary
+import com.asiasama.pizzaapp.ui.theme.Typography
 import com.asiasama.pizzaapp.ui.theme.White_FF
 import com.asiasama.pizzaapp.ui.theme.screen.food_details.IngredientUiState
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun Chip(
     modifier: Modifier = Modifier,
@@ -32,27 +37,28 @@ fun Chip(
     isSelected: Boolean = false,
     onChecked: (String) -> Unit = {},
 ) {
+    val scale by animateFloatAsState(if (isSelected) 1.2f else 1f)
+    val elevation by animateDpAsState(if (isSelected) 16.dp else 0.dp)
 
-    Box(
+    IconButton(
         modifier = modifier
-            .background(
-                color = if (isSelected) Primary else White_FF,
-                shape = RoundedShape.extraSmall
+            .shadow(
+                elevation = elevation,
+                shape = RoundedShape.extraLarge,
+                ambientColor = if (isSelected) Black_60 else Color.Transparent,
+                spotColor = if (isSelected) Black_60 else Color.Transparent
             )
-            .border(
-                width = if (isSelected) 2.dp else 1.dp,
-                color = if (isSelected) Color.Transparent else Secondary,
-                shape = RoundedShape.extraSmall
-            )
-            .padding(12.dp)
-            .clickable {
-                onChecked(text)
-            }
-            .wrapContentSize()
+            .background(color = White_FF, shape = RoundedShape.extraLarge)
+            .size(46.dp)
+            .graphicsLayer(
+                scaleX = scale,
+                scaleY = scale
+            ),
+        onClick = { onChecked(text) },
     ) {
         Text(
-            text = text, style = MaterialTheme.typography.headlineSmall,
-            color = if (isSelected) White_FF else Primary
+            text = text, style = Typography.titleMedium,
+            color = Primary,
         )
     }
 }
@@ -64,8 +70,6 @@ fun IngredientChip(
     selected: Boolean,
     onClick: () -> Unit,
 ) {
-//    var selected by remember { mutableStateOf(false) }
-
     Box(
         modifier = modifier
             .background(
@@ -78,11 +82,7 @@ fun IngredientChip(
                 shape = RoundedShape.extraSmall
             )
             .padding(12.dp)
-            .clickable {
-                onClick()
-                //  selected = !selected
-                Log.e("TAG", "IngredientChip: ${state}")
-            }
+            .clickable { onClick() }
             .size(60.dp)
     ) {
         Image(
