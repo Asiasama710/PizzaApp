@@ -32,6 +32,7 @@ import com.asiasama.pizzaapp.ui.theme.Typography
 import com.asiasama.pizzaapp.ui.theme.White_FF
 import com.asiasama.pizzaapp.ui.theme.screen.food_details.IngredientUiState
 
+
 @Preview(showBackground = true)
 @Composable
 fun Chip(
@@ -45,6 +46,13 @@ fun Chip(
 
     IconButton(
         modifier = modifier
+            .shadow(
+                elevation = elevation,
+                shape = RoundedShape.extraLarge,
+                ambientColor = if (isSelected) Black_60 else Color.Transparent,
+                spotColor = if (isSelected) Black_60 else Color.Transparent
+            )
+            .background(color = White_FF, shape = RoundedShape.extraLarge)
             .size(46.dp)
             .graphicsLayer(
                 scaleX = scale,

@@ -1,8 +1,9 @@
+@file:OptIn(ExperimentalFoundationApi::class)
+
 package com.asiasama.pizzaapp.ui.theme.screen.food_details
 
-import android.annotation.SuppressLint
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,50 +13,46 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.asiasama.pizzaapp.R
 import com.asiasama.pizzaapp.ui.theme.Black_37
-import com.asiasama.pizzaapp.ui.theme.Black_60
-import com.asiasama.pizzaapp.ui.theme.RoundedShape
+import com.asiasama.pizzaapp.ui.theme.Black_87
 import com.asiasama.pizzaapp.ui.theme.Tertiary
 import com.asiasama.pizzaapp.ui.theme.Typography
-import com.asiasama.pizzaapp.ui.theme.White_FF
 import com.asiasama.pizzaapp.ui.theme.screen.AppBarWithIcon
 import com.asiasama.pizzaapp.ui.theme.screen.Chip
 import com.asiasama.pizzaapp.ui.theme.screen.IngredientChip
 import com.asiasama.pizzaapp.ui.theme.screen.Pager
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
-import kotlinx.coroutines.DelicateCoroutinesApi
 
+@OptIn(ExperimentalPagerApi::class)
 @Preview(showSystemUi = true)
 @Composable
 fun FoodDetailsScreen(
@@ -71,19 +68,8 @@ fun FoodDetailsScreen(
 
 }
 
-@SuppressLint("UnrememberedMutableState")
-@Composable
-private fun animateHorizontalAlignmentAsState(
-    targetBiasValue: Float,
-): State<BiasAlignment.Horizontal> {
-    val bias by animateFloatAsState(targetBiasValue)
-    return derivedStateOf { BiasAlignment.Horizontal(bias) }
-}
 
-@OptIn(
-    ExperimentalPagerApi::class, DelicateCoroutinesApi::class, ExperimentalMaterial3Api::class,
-    ExperimentalFoundationApi::class
-)
+@ExperimentalPagerApi
 @Composable
 fun FoodDetailsContent(
     state: FoodUiState,
@@ -126,50 +112,33 @@ fun FoodDetailsContent(
             )
 
         }
-
-        Row(
+        Text(modifier = Modifier.padding(bottom = 24.dp),
+            text = "$17",
+            style = TextStyle(
+                color = Black_87,
+                fontSize = 24.sp,
+                fontFamily = FontFamily.Default,
+                fontWeight = FontWeight.SemiBold,
+            )
+        )
+        LazyRow(
             modifier = Modifier.padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(24.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            state.pizzaSize.forEachIndexed { position, item ->
-
-                Box {
-                    val elevation by animateDpAsState(if (item.isSelected) 16.dp else 0.dp)
-                    Box(modifier = Modifier.zIndex(1f)) {
-                        Chip(
-                            modifier = Modifier,
-                            text = item.pizzaSize,
-                            isSelected = item.isSelected,
-                            onChecked = onClickSize
-
+            items(items = state.pizzaSize, key = { it.pizzaSize }) {
+                Chip(
+                    modifier = Modifier.animateItemPlacement(
+                        animationSpec = spring(
+                            dampingRatio = Spring.DampingRatioMediumBouncy,
+                            stiffness = Spring.StiffnessLow
                         )
-                    }
-                    Box(
-                        modifier = Modifier
-                            .align(
-                                alignment = when (position) {
-                                    0 -> Alignment.TopStart
-                                    1 -> Alignment.TopCenter
-                                    else -> Alignment.TopEnd
-                                }
-                            )
-                            .shadow(
-                                elevation = elevation,
-                                shape = RoundedShape.extraLarge,
-                                ambientColor = if (item.isSelected) Black_60 else Color.Transparent,
-                                spotColor = if (item.isSelected) Black_60 else Color.Transparent
-                            )
-                            .background(
-                                color = White_FF,
-                                shape = RoundedShape.extraLarge
-                            )
-                            .size(46.dp)
-
-                    )
-                }
+                    ),
+                    text = it.pizzaSize,
+                    isSelected = it.isSelected,
+                    onChecked = onClickSize
+                )
             }
-
         }
 
         Text(
@@ -220,7 +189,7 @@ fun FoodDetailsContent(
                 )
             }
         }
-        Spacer(modifier = Modifier.padding(bottom = 16.dp))
+        Spacer(modifier = Modifier.padding(bottom = 24.dp))
     }
 }
 
