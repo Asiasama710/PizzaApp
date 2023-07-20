@@ -38,11 +38,11 @@ class FoodDetailsViewModel : ViewModel() {
         _state.update {
             it.copy(pizza = it.pizza.map {
                 it.copy(ingredient = listOf(
-                        IngredientUiState(id = 0, imageIcon = R.drawable.ic_basil, image = R.drawable.basil),
-                        IngredientUiState(id = 1, imageIcon = R.drawable.ic_broccoli, image = R.drawable.broccoli),
-                        IngredientUiState(id = 2, imageIcon = R.drawable.ic_sausage, image = R.drawable.sausage),
-                        IngredientUiState(id = 3, imageIcon = R.drawable.ic_onion, image = R.drawable.onion),
-                        IngredientUiState(id = 4, imageIcon = R.drawable.ic_mushroom, image = R.drawable.mushroom),
+                        IngredientUiState(id = 0, imageIcon = R.drawable.ic_basil, image = R.drawable.img1),
+                        IngredientUiState(id = 1, imageIcon = R.drawable.ic_broccoli, image = R.drawable.img2),
+                        IngredientUiState(id = 2, imageIcon = R.drawable.ic_sausage, image = R.drawable.img4),
+                        IngredientUiState(id = 3, imageIcon = R.drawable.ic_onion, image = R.drawable.img3),
+                        IngredientUiState(id = 4, imageIcon = R.drawable.ic_mushroom, image = R.drawable.img5),
                     )
                 )
             }

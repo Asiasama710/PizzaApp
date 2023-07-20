@@ -5,6 +5,8 @@ import androidx.compose.ui.graphics.Color
 
 val Primary = Color(0xFF131313)
 val Secondary = Color(0xFFE6E6E6)
+val Tertiary = Color(0xFF392C27)
+val ChipColor = Color(0xFFDAF0AB)
 
 
 val Black_87 = Color(0xDE121212)

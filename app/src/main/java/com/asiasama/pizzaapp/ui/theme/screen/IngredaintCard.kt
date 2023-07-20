@@ -9,12 +9,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -22,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.asiasama.pizzaapp.ui.theme.Black_60
+import com.asiasama.pizzaapp.ui.theme.ChipColor
 import com.asiasama.pizzaapp.ui.theme.Primary
 import com.asiasama.pizzaapp.ui.theme.RoundedShape
 import com.asiasama.pizzaapp.ui.theme.Secondary
@@ -42,13 +45,6 @@ fun Chip(
 
     IconButton(
         modifier = modifier
-            .shadow(
-                elevation = elevation,
-                shape = RoundedShape.extraLarge,
-                ambientColor = if (isSelected) Black_60 else Color.Transparent,
-                spotColor = if (isSelected) Black_60 else Color.Transparent
-            )
-            .background(color = White_FF, shape = RoundedShape.extraLarge)
             .size(46.dp)
             .graphicsLayer(
                 scaleX = scale,
@@ -63,32 +59,46 @@ fun Chip(
     }
 }
 
+
 @Composable
 fun IngredientChip(
     modifier: Modifier = Modifier,
     state: IngredientUiState,
-    selected: Boolean,
+    isSelected: Boolean,
     onClick: () -> Unit,
 ) {
-    Box(
+
+    val scale by animateFloatAsState(if (isSelected) 1.2f else 1f)
+
+    IconButton(
+        onClick = { onClick() },
         modifier = modifier
             .background(
-                color = if (selected) Secondary else White_FF,
-                shape = RoundedShape.extraSmall
+                color = if (isSelected) ChipColor else White_FF,
+                shape = CircleShape
             )
-            .border(
-                width = if (selected) 0.dp else 1.dp,
-                color = if (selected) Color.Transparent else Secondary,
-                shape = RoundedShape.extraSmall
+            .background(
+                color = if (isSelected) ChipColor else White_FF,
+                shape = CircleShape
             )
-            .padding(12.dp)
-            .clickable { onClick() }
             .size(60.dp)
-    ) {
+            .graphicsLayer(
+                scaleX = scale,
+                scaleY = scale
+            ),
+
+        ) {
         Image(
+            painter = painterResource(id = state.imageIcon),
+            contentDescription = null,
             modifier = Modifier
-                .align(Alignment.Center),
-            painter = painterResource(id = state.imageIcon), contentDescription = null
+                .padding(8.dp)
+                .size(54.dp, 54.dp)
+                .clip(CircleShape)
+                .background(
+                    color = if (isSelected) ChipColor else White_FF,
+                    shape = CircleShape
+                ),
         )
     }
 }
